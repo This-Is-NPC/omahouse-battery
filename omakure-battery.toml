@@ -1,0 +1,98 @@
+# The omahouse Battery, for Omakure.
+#
+# Every script here is a thin wrapper over one `omahouse` verb. None of them
+# reimplements a decision: the rules, the arithmetic and the refusals live in
+# omahouse, and a second place that decided any of it would be a second answer
+# to the same question.
+#
+# Paths are flat on purpose. A Remote Cue names a script by its file name and
+# `cue_dispatch.script` admits no `/`, so a script installed into a
+# subdirectory of the workspace cannot be dispatched. Flat is what makes the
+# acting half of this Battery reachable at all.
+
+[battery]
+name = "omahouse"
+version = "0.1.0"
+description = "House rules for Omarchy accounts, driven through Omakure"
+
+# -- the seven that act ------------------------------------------------------
+#
+# Their whole answer is success or failure, which is exactly what a `cue_ack`
+# and a `run-completed` Signal carry. These are the ones worth dispatching.
+
+[[scripts]]
+id = "omahouse.grant"
+path = "omahouse-grant.sh"
+description = "Hand over more time today, to a session or to one budget"
+tags = ["omahouse", "write", "cue"]
+
+[[scripts]]
+id = "omahouse.allow"
+path = "omahouse-allow.sh"
+description = "Release a program, optionally with a daily limit"
+tags = ["omahouse", "write", "cue"]
+
+[[scripts]]
+id = "omahouse.deny"
+path = "omahouse-deny.sh"
+description = "Take a program back off the list"
+tags = ["omahouse", "write", "cue"]
+
+[[scripts]]
+id = "omahouse.limit"
+path = "omahouse-limit.sh"
+description = "Write the day's budget for the session, one program, or one site"
+tags = ["omahouse", "write", "cue"]
+
+[[scripts]]
+id = "omahouse.web-rule"
+path = "omahouse-web-rule.sh"
+description = "Block or allow one site for a profile"
+tags = ["omahouse", "write", "cue"]
+
+[[scripts]]
+id = "omahouse.enforce"
+path = "omahouse-enforce.sh"
+description = "Put the teeth in, or take them out"
+tags = ["omahouse", "write", "cue"]
+
+[[scripts]]
+id = "omahouse.profile-apply"
+path = "omahouse-profile-apply.sh"
+description = "Write the whole profiles.json this Battery carries, after it parses"
+tags = ["omahouse", "write", "cue", "fleet"]
+
+# -- the two that ask, and stay home -----------------------------------------
+#
+# Their answer is a document. The Health Plane forbids script stdout, usernames
+# and process lists at any depth, so none of it can travel; these are for the
+# local CLI and for the machine's own authenticated HTTP API.
+
+[[scripts]]
+id = "omahouse.status"
+path = "omahouse-status.sh"
+description = "The live picture for one account, as JSON (local only)"
+tags = ["omahouse", "read", "local-only"]
+
+[[scripts]]
+id = "omahouse.report"
+path = "omahouse-report.sh"
+description = "The day's totals for one account, as JSON (local only)"
+tags = ["omahouse", "read", "local-only"]
+
+# -- the two that ask in a shape that fits an exit code ----------------------
+#
+# The only remote questions this design allows: the answer is a number between
+# -256 and 255, and that is the one thing a Signal carries back.
+
+[[scripts]]
+id = "omahouse.health"
+path = "omahouse-health.sh"
+description = "Is the daemon up and did it count today? The exit code is the answer"
+tags = ["omahouse", "read", "cue"]
+
+[[scripts]]
+id = "omahouse.drift"
+path = "omahouse-drift.sh"
+description = "Does this machine's profiles.json match what the Battery carries?"
+tags = ["omahouse", "read", "cue", "fleet"]
