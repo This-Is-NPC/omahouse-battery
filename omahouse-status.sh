@@ -70,10 +70,18 @@ settled() {
     printf '%s' "${!var-}"
 }
 
+# The absolute path, never the bare word. A function here named `omahouse`
+# would be found by every later `omahouse ...` in this file before the binary
+# is, and calling it would call itself: bash recurses until the stack is gone
+# and dies of SIGSEGV. Measured on a real machine, where it is not hypothetical
+# -- it only appears when `OMAHOUSE_BIN` is unset, which is every real machine,
+# and a sandbox that sets the variable to a path never sees it. So the wrapper
+# below is `omahouse_root` and this resolves to a path.
 bin() {
-    local b=${OMAHOUSE_BIN:-omahouse}
-    command -v "$b" >/dev/null 2>&1 || die "omahouse is not on PATH" "$EX_MISSING"
-    printf '%s' "$b"
+    local wanted=${OMAHOUSE_BIN:-omahouse} resolved
+    resolved=$(command -v -- "$wanted" 2>/dev/null) \
+        || die "omahouse is not on PATH" "$EX_MISSING"
+    printf '%s' "$resolved"
 }
 
 # Layer 3, for the account and for nothing else. A machine with one profile on
@@ -110,7 +118,7 @@ writable_config() {
     return 1
 }
 
-omahouse() {
+omahouse_root() {
     local b
     b=$(bin)
     if writable_config; then
