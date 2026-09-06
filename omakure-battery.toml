@@ -15,7 +15,7 @@ name = "omahouse"
 version = "0.1.0"
 description = "House rules for Omarchy accounts, driven through Omakure"
 
-# -- the seven that act ------------------------------------------------------
+# -- the twelve that act -----------------------------------------------------
 #
 # Their whole answer is success or failure, which is exactly what a `cue_ack`
 # and a `run-completed` Signal carry. These are the ones worth dispatching.
@@ -57,12 +57,42 @@ description = "Put the teeth in, or take them out"
 tags = ["omahouse", "write", "cue"]
 
 [[scripts]]
+id = "omahouse.profile-add"
+path = "omahouse-profile-add.sh"
+description = "Put an account under rules, and make the Linux account if asked"
+tags = ["omahouse", "write", "cue", "provision"]
+
+[[scripts]]
+id = "omahouse.profile-remove"
+path = "omahouse-profile-remove.sh"
+description = "Take an account out from under the rules"
+tags = ["omahouse", "write", "cue"]
+
+[[scripts]]
+id = "omahouse.profile-default"
+path = "omahouse-profile-default.sh"
+description = "Whether a program no rule names may open"
+tags = ["omahouse", "write", "cue"]
+
+[[scripts]]
+id = "omahouse.web-mode"
+path = "omahouse-web-mode.sh"
+description = "Whether the web rules list what opens or what does not"
+tags = ["omahouse", "write", "cue"]
+
+[[scripts]]
+id = "omahouse.web-incognito"
+path = "omahouse-web-incognito.sh"
+description = "Whether a private window may open at all"
+tags = ["omahouse", "write", "cue"]
+
+[[scripts]]
 id = "omahouse.profile-apply"
 path = "omahouse-profile-apply.sh"
 description = "Write the whole profiles.json this Battery carries, after it parses"
 tags = ["omahouse", "write", "cue", "fleet"]
 
-# -- the two that ask, and stay home -----------------------------------------
+# -- the three that ask, and stay home ---------------------------------------
 #
 # Their answer is a document. The Health Plane forbids script stdout, usernames
 # and process lists at any depth, so none of it can travel; these are for the
@@ -72,6 +102,12 @@ tags = ["omahouse", "write", "cue", "fleet"]
 id = "omahouse.status"
 path = "omahouse-status.sh"
 description = "The live picture for one account, as JSON (local only)"
+tags = ["omahouse", "read", "local-only"]
+
+[[scripts]]
+id = "omahouse.profile-show"
+path = "omahouse-profile-show.sh"
+description = "The rules of one profile, as JSON (local only)"
 tags = ["omahouse", "read", "local-only"]
 
 [[scripts]]
